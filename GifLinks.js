@@ -3,6 +3,7 @@ var GifLinks = (function() {
   'use strict';
   var body;
   var container;
+  var video;
 
   /* -------------------------
   /*          UTILS
@@ -123,18 +124,42 @@ var GifLinks = (function() {
     container = document.createElement( 'div' );
     applyProperties( container, containerProperties );
     body.appendChild( container );
+    video = createVideoElement();
+    container.appendChild( video );
   }
 
   // Add the background to the container, and the container to the page!
   function startPartying( element ) {
 
-    var awesomeGif = element.getAttribute( 'data-src' );
-    if( awesomeGif ) {
-      container.style[ 'backgroundImage' ] = 'url(' + awesomeGif + ')';
+    var source = element.getAttribute( 'data-src' );
+    if( source ) {
+      // if it's a video
+      if (source.match(/webm$/) || source.match(/mp4$/)){
+        video.src = './video/SimplisticMiserableHoneybee.webm';
+        video.style[ 'display' ] = 'block';
+      }
+      else { // we assume everyhing else is an image
+        container.style[ 'backgroundImage' ] = 'url(' + source + ')';
+      }
+
       container.style[ 'display' ] = 'block';
     } else {
       console.log( "Sorry, an element doesn't have a data-src!" );
     }
+  }
+
+  function createVideoElement() {
+    var video = document.createElement('video');
+    video.loop = true;
+    video.autoplay = true;
+    applyProperties( video, {      
+      'display': 'none',
+      'width': '100%',
+      'margin': '0px',
+      'left': '0px',
+      'top': '0px',
+    });
+    return video;
   }
 
   // Hide the container
@@ -142,6 +167,8 @@ var GifLinks = (function() {
 
     container.style[ 'display' ] = 'none';
     container.style[ 'backgroundImage' ] = '';
+    video.style[ 'display' ] = 'none';
+    video.src = '';
   }
 
 
